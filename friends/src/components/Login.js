@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios'; 
 
-function Login() {
+function Login(props) {
 
     const [credentials, setCredentials] = useState({ username:'', password:'' });
 
@@ -9,21 +9,23 @@ function Login() {
         setCredentials({ ...credentials,
                 [event.target.name]: event.target.value
             })
-            console.log(credentials); 
+            //console.log(credentials); 
     }
 
     const handleSubmit = (event) => {
         event.preventDefault(); 
         axios
             .post('http://localhost:5000/api/login', credentials)
-            // .then(response => {
-            //     localStorage.setItem('token', response.data.payload)
-            // })
-            .then(response => console.log(response))
+            .then(response => {
+                localStorage.setItem('token', response.data.payload);
+                props.history.push('/friends');
+            })
+            // .then(response => console.log(response))
             .catch(error => {
                 console.log(credentials); 
                 console.log(error.response);
             })
+            setCredentials({ username:'', password:'' })
     }   
 
     
